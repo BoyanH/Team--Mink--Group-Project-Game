@@ -54,7 +54,7 @@
 				this.direction.y = "down";
 			}
 			if(this.y === racket.y - this.radius) {
-				if ((this.x - this.radius >= racket.x) && (this.x - this.radius <= racket.x + racket.width/2)) {
+				if ((this.x + this.radius >= racket.x) && (this.x - this.radius <= racket.x + racket.width/2)) {
 					this.direction.y = "up";
 					this.direction.x = "left";
 				};
