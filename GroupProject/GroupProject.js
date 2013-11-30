@@ -11,8 +11,12 @@
             "right": +1,
             "up": -1.5,
             "down": +1
-        };
-		
+
+        },
+		ball = new Ball(100, 100, 5, 5, direction);	
+    
+    var racket = new Racket(ctx.canvas.width / 2, ctx.canvas.height - 10, 100, 8);
+	racket.direction = "none";
     var intialize = true;
     window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                                   window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
@@ -28,7 +32,7 @@
 		this.draw = function(ctx) {
 			ctx.beginPath();
 			ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
-			ctx.stroke();
+			ctx.fill();
 		};
 
 		this.move = function() {
@@ -49,23 +53,20 @@
 			if(this.y < 0 + this.radius) {
 				this.direction.y = "down";
 			}
-			if(this.y === Racket.y - this.radius) {
-				if ((this.x + this.radius >= Racket.x - 1.5*(Racket.width)/2)) && (this.x + this.radius <= (Racket.x + 1.5*(Racket.width))/2)) {
+			if(this.y === racket.y - this.radius) {
+				if ((this.x - this.radius >= racket.x) && (this.x - this.radius <= racket.x + racket.width/2)) {
 					this.direction.y = "up";
 					this.direction.x = "left";
-				}
-			//	if ((this.x + this.radius >= (Racket.x + 1.5*(Racket.width)/2)) && (this.x + this.radius <= Racket.x + 1.5*(Racket.width))) {
-			//		this.direction.y = "up";
-			//		this.direction.x = "right";
-			//	}
+				};
+				if ((this.x - this.radius >= racket.x + racket.width/2) && (this.x - this.radius <= racket.x + racket.width)) {
+					this.direction.y = "up";
+					this.direction.x = "right";
+				};
+
 			}
 		};
 
 	}
-	var ball = new Ball(100, 100, 20, 5, direction);
-	ball.draw(ctx);
-	ball.move();
-	ball.draw(ctx);
 
 	function Racket(x,y,width,speed) {
 	    this.x = x;
@@ -81,12 +82,13 @@
 	    }
 	    this.draw = function (ctx) {
 	        ctx.beginPath();
-	        ctx.rect(this.x, this.y, this.width, 4);
+	        ctx.moveTo(this.x, this.y);
+	        ctx.lineTo(this.x + this.width / 2, this.y - 8);
+	        ctx.lineTo(this.x + this.width, this.y);
+	        ctx.lineTo(this.x, this.y);
 	        ctx.fill();
 	    }
 	}
-	var racket = new Racket(ctx.canvas.width / 2, ctx.canvas.height - 10, 80, 8);
-	racket.direction = "none";
 
 	function animationFrame() {
 		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
