@@ -13,14 +13,73 @@
             "down": +1
 
         },
-		ball = new Ball(100, 100, 5, 5, direction);	
-    
-    var racket = new Racket(ctx.canvas.width / 2, ctx.canvas.height - 10, 100, 8);
+		
+		ball = new Ball(400, 400, 5, 5, direction);	
+        racket = new Racket(ctx.canvas.width / 2, ctx.canvas.height - 10, 100, 8);
+	
 	racket.direction = "none";
     var intialize = true;
+    var firstMoveAfterBounce = false;
+    
     window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                                   window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 
+	function get_random_color() {
+        var letters = '0123456789ABCDEF'.split('');
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.round(Math.random() * 15)];
+        }
+        return color;
+    }
+
+    function Brick(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.width = 100;
+        this.height = 20;
+        this.color = color;
+        this.isDestroyed = false;
+        this.draw = function (ctx) {
+            ctx.beginPath();
+            ctx.rect(x, y, 100, 20);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+        }
+    }
+
+    var bricks = [];
+    var r = 30, t = 10;
+    for (var i = 0; i < 7; i++) {
+        bricks.push(new Brick(r, t, get_random_color()));
+        r += bricks[i].width + 5;
+    }
+    t += 30;
+    r = 30;
+    for (var i = 0; i < 7; i++) {
+        bricks.push(new Brick(r, t, get_random_color()));
+        r += bricks[i].width + 5;
+    }
+    t += 30;
+    r = 30;
+    for (var i = 0; i < 7; i++) {
+        bricks.push(new Brick(r, t, get_random_color()));
+        r += bricks[i].width + 5;
+    }
+    t += 30;
+    r = 30;
+    for (var i = 0; i < 7; i++) {
+        bricks.push(new Brick(r, t, get_random_color()));
+        r += bricks[i].width + 5;
+    }
+    t += 30;
+    r = 30;
+    for (var i = 0; i < 7; i++) {
+        bricks.push(new Brick(r, t, get_random_color()));
+        r += bricks[i].width + 5;
+    }
+    var destroyedBrick = false;
+    var bounceBall = false;
 	function Ball(x, y, radius, speed, direction) {
 
 		this.x = x;
@@ -53,16 +112,31 @@
 			if(this.y < 0 + this.radius) {
 				this.direction.y = "down";
 			}
-			if(this.y === racket.y - this.radius) {
-				if ((this.x + this.radius >= racket.x) && (this.x - this.radius <= racket.x + racket.width/2)) {
-					this.direction.y = "up";
-					this.direction.x = "left";
-				};
-				if ((this.x - this.radius >= racket.x + racket.width/2) && (this.x - this.radius <= racket.x + racket.width)) {
-					this.direction.y = "up";
-					this.direction.x = "right";
-				};
+			if (this.y >= racket.y - this.radius) {
 
+			    if (this.x >= racket.x && this.x <= racket.x + racket.width && this.y <= ctx.canvas.height) {
+			        if (this.x <= racket.x + (racket.width / 2)) {
+			            this.direction.y = "up";
+			            this.direction.x = "left";
+			        }
+			        else {
+			            this.direction.y = "up";
+			            this.direction.x = "right";
+			        }
+			    }
+			}
+			for (var i in bricks) {
+			    console.log(bricks[i].isDestroyed);
+			    if (!bricks[i].isDestroyed) {
+			        if (this.y - 15 >= bricks[i].y - bricks[i].height && this.y - 15 < bricks[i].y
+                        && this.x >= bricks[i].x && this.x <= bricks[i].x+bricks[i].width) {
+			            bricks[i].isDestroyed = true;
+			            destroyedBrick = true;
+			            this.direction.y = "down";
+			            ctx.clearRect(bricks[i].x, bricks[i].y, bricks[i].width, bricks[i].height);
+			            break;
+			        }
+			    }
 			}
 		};
 
@@ -90,13 +164,33 @@
 	    }
 	}
 
+	for (var i in bricks) {
+	    if (!bricks[i].isDestroyed)
+	        bricks[i].draw(ctx);
+	}
+
 	function animationFrame() {
-		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-		ball.bounce(ctx.canvas.width, ctx.canvas.height);
+		ctx.clearRect(ball.x - ball.radius - 5, ball.y - ball.radius - 5, ball.radius * 2 + 15, ball.radius * 2 + 15);
+	    ctx.clearRect(racket.x - 5, racket.y - 10 ,racket.width + 10, 20);
+	    ball.bounce(ctx.canvas.width, ctx.canvas.height);
 		ball.move();
 		ball.draw(ctx);
+		racket.move();
 		racket.draw(ctx);
-
+		if (firstMoveAfterBounce) {
+		    for (var i in bricks) {
+		        if (!bricks[i].isDestroyed)
+		            bricks[i].draw(ctx);
+		    }
+		}
+		if (destroyedBrick) {
+		    for (var i in bricks) {
+		        if (!bricks[i].isDestroyed)
+		            bricks[i].draw(ctx);
+		    }
+		    destroyedBrick = false;
+		    firstMoveAfterBounce = true;
+		}
         //not to move outside the canvas
 		if (racket.x + racket.width >= ctx.canvas.width) {
 		    racket.x -= racket.speed;
@@ -104,7 +198,6 @@
 		if (racket.x < 0) {
 		    racket.x += racket.speed;
 		}
-		racket.move();
 
         //when key is not down the direction should be none
 		document.addEventListener('keyup',function(event)
