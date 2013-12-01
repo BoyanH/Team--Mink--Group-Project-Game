@@ -92,6 +92,7 @@
 			ctx.beginPath();
 			ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
 			ctx.fill();
+			ctx.stroke();
 		};
 
 		this.move = function() {
@@ -161,6 +162,7 @@
 	        ctx.lineTo(this.x + this.width, this.y);
 	        ctx.lineTo(this.x, this.y);
 	        ctx.fill();
+	        ctx.stroke();
 	    }
 	}
 
