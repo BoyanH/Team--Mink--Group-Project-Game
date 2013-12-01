@@ -40,11 +40,14 @@
         this.height = 20;
         this.color = color;
         this.isDestroyed = false;
+        this.isClearStroke = false;
         this.draw = function (ctx) {
             ctx.beginPath();
             ctx.rect(x, y, 100, 20);
             ctx.fillStyle = this.color;
             ctx.fill();
+            ctx.strokeStyle = "black";
+            ctx.stroke();
         }
     }
 
@@ -92,6 +95,7 @@
 			ctx.beginPath();
 			ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
 			ctx.fill();
+			ctx.strokeStyle = "black";
 			ctx.stroke();
 		};
 
@@ -127,7 +131,6 @@
 			    }
 			}
 			for (var i in bricks) {
-			    console.log(bricks[i].isDestroyed);
 			    if (!bricks[i].isDestroyed) {
 			        if (this.y - 15 >= bricks[i].y - bricks[i].height && this.y - 15 < bricks[i].y
                         && this.x >= bricks[i].x && this.x <= bricks[i].x+bricks[i].width) {
@@ -162,6 +165,7 @@
 	        ctx.lineTo(this.x + this.width, this.y);
 	        ctx.lineTo(this.x, this.y);
 	        ctx.fill();
+	        ctx.strokeStyle = "black";
 	        ctx.stroke();
 	    }
 	}
@@ -183,6 +187,12 @@
 		    for (var i in bricks) {
 		        if (!bricks[i].isDestroyed)
 		            bricks[i].draw(ctx);
+		        else {
+		            if (!bricks[i].isClearStroke) {
+		                ctx.clearRect(bricks[i].x - 2, bricks[i].y - 2, bricks[i].width + 4, bricks[i].height + 4);
+		                bricks[i].isClearStroke = true;
+		            }
+		        }
 		    }
 		}
 		if (destroyedBrick) {
