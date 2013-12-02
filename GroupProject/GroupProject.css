@@ -11,16 +11,3 @@ canvas {
     /* IE 8 */
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#20CF10, endColorstr=#20CF10)" no-repeat;
 }
-body h1 {
-    text-align: center;
-    font-family:'Buxton Sketch';
-    font-size:50px;
-    color: #3377d5;
-}
-#container {
-   width: 100%;
-   text-align:center;
-}
-body {
-    background-image:url(sources/1397327.jpg);
-}

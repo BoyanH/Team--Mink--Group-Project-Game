@@ -7,14 +7,14 @@
 		    y: "down"
 		},
         directions = {
-            "left": -1.1,
-            "right": +1.1,
+            "left": -1,
+            "right": +1,
             "up": -1.5,
-            "down": +1.3
+            "down": +1
 
         },
 		
-		ball = new Ball(400, 400, 5, 4, direction);	
+		ball = new Ball(400, 400, 5, 5, direction);	
         racket = new Racket(ctx.canvas.width / 2, ctx.canvas.height - 10, 100, 8);
 	
 	racket.direction = "none";
