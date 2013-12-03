@@ -130,18 +130,23 @@
 			        }
 			    }
 			}
-			for (var i in bricks) {
-			    if (!bricks[i].isDestroyed) {
-			        if (this.y - 15 >= bricks[i].y - bricks[i].height && this.y - 15 < bricks[i].y
-                        && this.x >= bricks[i].x && this.x <= bricks[i].x+bricks[i].width) {
-			            bricks[i].isDestroyed = true;
-			            destroyedBrick = true;
-			            this.direction.y = "down";
-			            ctx.clearRect(bricks[i].x, bricks[i].y, bricks[i].width, bricks[i].height);
-			            break;
-			        }
-			    }
-			}
+			 for (var i in bricks) {
+                		if (!bricks[i].isDestroyed) {
+                			 if (this.y - 15 >= bricks[i].y - bricks[i].height && this.y - 15 < bricks[i].y
+            					&& this.x >= bricks[i].x && this.x <= bricks[i].x + bricks[i].width) {
+                        		bricks[i].isDestroyed = true;
+                        		destroyedBrick = true;
+                        		if (this.direction.y == "up") {
+                            		this.direction.y = "down";
+                        		}
+                        		else {
+                        		 this.direction.y = "up";
+                        		}
+                        		ctx.clearRect(bricks[i].x, bricks[i].y, bricks[i].width, bricks[i].height);
+                			 break;
+                    			}
+                		}
+            		}
 		};
 
 	}
