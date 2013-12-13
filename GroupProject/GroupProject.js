@@ -14,14 +14,16 @@
 
         };
 
-    var intialize = true;
-    var firstMoveAfterBounce = false;
-    var beforePushBall = true;
-    var countBrokenBeerBrics = 0;
-    var countBrokenCokeBrics = 0;
-    var destroyedBrick = false;
-    var bounceBall = false;
-    var cordinatesOfLastDestroyedBrick = { x: 0, y: 0 };
+        intialize = true,
+        firstMoveAfterBounce = false,
+        beforePushBall = true,
+        countBrokenBeerBrics = 0,
+        countBrokenCokeBrics = 0,
+        destroyedBrick = false,
+        bounceBall = false,
+        score = 0,
+        displayScore = "Score: " + score;
+        cordinatesOfLastDestroyedBrick = { x: 0, y: 0 };
 
     window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                                   window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
@@ -156,6 +158,7 @@
         };
 
     }
+
     function cokeBottle(x, y, speed) {
         this.speed = speed;
         this.x = x;
@@ -276,6 +279,10 @@
             ctx.stroke();
 
         }
+
+        if ((this.y >= racket.y) && (this.x >= racket.x && this.x <= racket.x + racket.width)){
+            score += 2;        
+        }
     }
     function Racket(x, y, width, speed) {
         this.x = x;
@@ -309,7 +316,15 @@
     var racket = new Racket(ctx.canvas.width / 2, ctx.canvas.height - 10, 100, 8);
 
     racket.direction = "none";
+
     function animationFrame() {
+
+
+        ctx.clearRect(ctx.canvas.width - 100, 300, ctx.canvas.width, 300);
+        ctx.font = "bold 24px Chiller";
+        ctx.fillStyle = "black";
+        ctx.fillText(displayScore, ctx.canvas.width - 100, 300);
+
         if (beforePushBall) {
             ctx.clearRect(racket.x - 25, racket.y - 25, racket.width + 50, 30);
             racket.draw(ctx);
@@ -345,26 +360,6 @@
         }
         else {
         }
-        ctx.clearRect(ball.x - ball.radius - 5, ball.y - ball.radius - 5, ball.radius * 2 + 15, ball.radius * 2 + 15);
-        ctx.clearRect(racket.x - 5, racket.y - 10, racket.width + 10, 20);
-        ball.bounce(ctx.canvas.width, ctx.canvas.height);
-        ball.move();
-        ball.draw(ctx);
-        racket.move();
-        racket.draw(ctx);
-        if (firstMoveAfterBounce) {
-            for (var i in bricks) {
-                if (!bricks[i].isDestroyed) {
-                    bricks[i].draw(ctx);
-                }
-                else {
-                    if (!bricks[i].isClearStroke) {
-                        ctx.clearRect(bricks[i].x - 2, bricks[i].y - 2, bricks[i].width + 4, bricks[i].height + 4);
-                        bricks[i].isClearStroke = true;
-                    }
-                }
-            }
-        }
         if (countBrokenBeerBrics == 5) {
             bottlesBeer.push(new beerBottle(cordinatesOfLastDestroyedBrick.x + 50, cordinatesOfLastDestroyedBrick.y + 40, 3));
             countBrokenBeerBrics = 0;
@@ -381,6 +376,24 @@
             destroyedBrick = false;
             firstMoveAfterBounce = true;
         }
+         for (var i in bottlesCoke) {
+            ctx.clearRect(bottlesCoke[i].x - 5, bottlesCoke[i].y - 50, 30, 60);
+            bottlesCoke[i].draw(ctx);
+            bottlesCoke[i].move();
+            if (bottlesCoke[i].y - 50 > ctx.canvas.height) {
+                bottlesCoke.splice(i, 1);
+            }
+        }
+
+        for (var i in bottlesBeer) {
+            ctx.clearRect(bottlesBeer[i].x - 5, bottlesBeer[i].y - 50, 30, 60);
+            bottlesBeer[i].draw(ctx);
+            bottlesBeer[i].move();
+            if (bottlesBeer[i].y - 50 > ctx.canvas.height) {
+                bottlesBeer.splice(i, 1);
+            }
+        }
+
         //not to move outside the canvas
         if (racket.x + racket.width >= ctx.canvas.width) {
             racket.x -= racket.speed;
@@ -408,22 +421,28 @@
                 racket.direction = "right";
             }
         });
-        for (var i in bottlesBeer) {
-            ctx.clearRect(bottlesBeer[i].x - 5, bottlesBeer[i].y - 50, 30, 60);
-            bottlesBeer[i].draw(ctx);
-            bottlesBeer[i].move();
-            if (bottlesBeer[i].y - 50 > ctx.canvas.height) {
-                bottlesBeer.splice(i, 1);
+
+        if (firstMoveAfterBounce) {
+            for (var i in bricks) {
+                if (!bricks[i].isDestroyed) {
+                    bricks[i].draw(ctx);
+                }
+                else {
+                    if (!bricks[i].isClearStroke) {
+                        ctx.clearRect(bricks[i].x - 2, bricks[i].y - 2, bricks[i].width + 4, bricks[i].height + 4);
+                        bricks[i].isClearStroke = true;
+                    }
+                }
             }
         }
-        for (var i in bottlesCoke) {
-            ctx.clearRect(bottlesCoke[i].x - 5, bottlesCoke[i].y - 50, 30, 60);
-            bottlesCoke[i].draw(ctx);
-            bottlesCoke[i].move();
-            if (bottlesCoke[i].y - 50 > ctx.canvas.height) {
-                bottlesCoke.splice(i, 1);
-            }
-        }
+
+        ctx.clearRect(ball.x - ball.radius - 5, ball.y - ball.radius - 5, ball.radius * 2 + 15, ball.radius * 2 + 15);
+        ctx.clearRect(racket.x - 5, racket.y - 10, racket.width + 10, 20);
+        ball.bounce(ctx.canvas.width, ctx.canvas.height);
+        ball.move();
+        ball.draw(ctx);
+        racket.move();
+        racket.draw(ctx);
 
         requestAnimationFrame(animationFrame);
 
