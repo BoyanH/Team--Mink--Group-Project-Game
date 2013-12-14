@@ -13,17 +13,17 @@
             "down": +1.3
 
         };
-        isAnimationOn = true;
-        intialize = true,
-        firstMoveAfterBounce = false,
-        beforePushBall = true,
-        countBrokenBeerBrics = 0,
-        countBrokenCokeBrics = 0,
-        destroyedBrick = false,
-        bounceBall = false,
-        score = 0,
-        displayScore = "Score: " + score;
-        cordinatesOfLastDestroyedBrick = { x: 0, y: 0 };
+    isAnimationOn = true;
+    intialize = true,
+    firstMoveAfterBounce = false,
+    beforePushBall = true,
+    countBrokenBeerBrics = 0,
+    countBrokenCokeBrics = 0,
+    destroyedBrick = false,
+    bounceBall = false,
+    score = 0,
+    displayScore = "Score: " + score;
+    cordinatesOfLastDestroyedBrick = { x: 0, y: 0 };
 
     window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                                   window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
@@ -280,7 +280,7 @@
 
         }
 
-        
+
     }
     function Racket(x, y, width, speed) {
         this.x = x;
@@ -330,7 +330,7 @@
             racket.draw(ctx);
             ball.direction.y = "up";
             ball.x = racket.x + racket.width / 2 - 5;
-            ball.y = racket.y-10;
+            ball.y = racket.y - 10;
             ball.draw(ctx);
             document.addEventListener('keydown', function (event) {
                 if (event.keyCode == 32) {
@@ -376,8 +376,8 @@
             destroyedBrick = false;
             firstMoveAfterBounce = true;
         }
-        
-         for (var i in bottlesCoke) {
+
+        for (var i in bottlesCoke) {
             ctx.clearRect(bottlesCoke[i].x - 5, bottlesCoke[i].y - 50, 30, 60);
             bottlesCoke[i].draw(ctx);
             bottlesCoke[i].move();
@@ -417,12 +417,13 @@
                 else {
                     if (!bricks[i].isClearStroke) {
                         ctx.clearRect(bricks[i].x - 2, bricks[i].y - 2, bricks[i].width + 4, bricks[i].height + 4);
+                        score += 10;
                         bricks[i].isClearStroke = true;
                     }
                 }
             }
         }
-        
+
         ctx.clearRect(ball.x - ball.radius - 5, ball.y - ball.radius - 5, ball.radius * 2 + 15, ball.radius * 2 + 15);
         ctx.clearRect(racket.x - 5, racket.y - 10, racket.width + 10, 20);
         ball.bounce(ctx.canvas.width, ctx.canvas.height);
@@ -431,7 +432,7 @@
         racket.move();
         racket.draw(ctx);
         if (ball.y >= ctx.canvas.height) {
-            ctx.clearRect(0,0,ctx.canvas.width, ctx.canvas.height);
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
             ctx.font = "bold 100px Chiller";
             ctx.fillStyle = "purple";
             ctx.fillText("GAME OVER", ctx.canvas.width / 2 - 220, ctx.canvas.height / 2);
