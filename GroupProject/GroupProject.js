@@ -448,6 +448,19 @@
             ctx.fillText(displayScore, ctx.canvas.width / 2 - 220, ctx.canvas.height / 2 + 50);
             isAnimationOn = false;
         }
+
+        if (bricks.length == 0) {
+
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            ctx.font = "bold 100px Chiller";
+            ctx.fillStyle = "purple";
+            ctx.fillText("GAME OVER", ctx.canvas.width / 2 - 220, ctx.canvas.height / 2);
+            ctx.font = "bold 42px Chiller";
+            ctx.fillStyle = "purple";
+            ctx.fillText(displayScore, ctx.canvas.width / 2 - 220, ctx.canvas.height / 2 + 50);
+            isAnimationOn = false;
+        }
+
         if (isAnimationOn) {
             requestAnimationFrame(animationFrame);
         }
@@ -455,3 +468,12 @@
 
     requestAnimationFrame(animationFrame);
 }())
+
+function reset() {
+
+    alert("Go cry to your mama!");
+    location.reload();
+}
+
+var resetBtn = document.getElementById("resetBtn");
+resetBtn.addEventListener("click", reset, true);
