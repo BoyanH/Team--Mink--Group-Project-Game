@@ -382,6 +382,7 @@
             bottlesCoke[i].draw(ctx);
             bottlesCoke[i].move();
             if ((bottlesCoke[i].y >= racket.y) && (bottlesCoke[i].x >= racket.x && bottlesCoke[i].x <= racket.x + racket.width)) {
+                ctx.clearRect(bottlesCoke[i].x - 5, bottlesCoke[i].y - 50, 30, 60);
                 score += 50;
                 bottlesCoke.splice(i, 1);
             }
@@ -397,6 +398,7 @@
             bottlesBeer[i].move();
             
             if ((bottlesBeer[i].y >= racket.y) && (bottlesBeer[i].x >= racket.x && bottlesBeer[i].x <= racket.x + racket.width)) {
+                ctx.clearRect(bottlesBeer[i].x - 5, bottlesBeer[i].y - 50, 30, 60);
                 score += 200;
                 bottlesBeer.splice(i, 1);
             }
