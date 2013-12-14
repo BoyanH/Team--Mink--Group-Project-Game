@@ -1,6 +1,7 @@
 canvas {
 	border: 1px solid gray;
-	/* Background Gradient for Triadic Colors */
+    /* Background Gradient for Triadic Colors */
+
     background-color: #3848F5;
     /* For WebKit (Safari, Chrome, etc) */
     background: #3848F5 -webkit-gradient(linear, left top, left bottom, from(#20CF10), to(#3848F5)) no-repeat;
@@ -10,4 +11,22 @@ canvas {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#20CF10, endColorstr=#3848F5) no-repeat;
     /* IE 8 */
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#20CF10, endColorstr=#20CF10)" no-repeat;
+}
+#title {
+    text-align:center;
+    font-family:'Buxton Sketch';
+    font-size:50px;
+    color:#3377d5;
+}
+#container {
+   width: 100%;
+   text-align:center;
+}
+h1 {
+    color:white;
+    font-family:Jokerman;
+    margin-left:470px;
+}
+body{
+    background-image:url(1397327.jpg);
 }
