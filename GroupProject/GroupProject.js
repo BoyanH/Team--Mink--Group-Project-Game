@@ -316,9 +316,9 @@
     racket.direction = "none";
 
     function animationFrame() {
-        if (beforePushBall == false) {
-            score++;
-        }
+        //if (beforePushBall == false) {
+        //    score++;
+        //}
         displayScore = "Score: " + score;
         ctx.clearRect(ctx.canvas.width - 100, 200, ctx.canvas.width, 300);
         ctx.font = "bold 24px Chiller";
@@ -383,7 +383,7 @@
             bottlesCoke[i].move();
             if (bottlesCoke[i].y - 50 > ctx.canvas.height) {
                 bottlesCoke.splice(i, 1);
-                scrore += 50;
+                score += 50;
             }
         }
 
