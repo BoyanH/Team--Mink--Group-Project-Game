@@ -32,5 +32,8 @@ body{
 }
 
 button {
+    padding:5px;
     margin-left: 43%;
+    background-color:yellowgreen;
+    border-radius:20px;
 }
