@@ -13,7 +13,7 @@
             "down": +1.3
 
         };
-
+        isAnimationOn = true;
         intialize = true,
         firstMoveAfterBounce = false,
         beforePushBall = true,
@@ -280,9 +280,7 @@
 
         }
 
-        if ((this.y >= racket.y) && (this.x >= racket.x && this.x <= racket.x + racket.width)){
-            score += 2;        
-        }
+        
     }
     function Racket(x, y, width, speed) {
         this.x = x;
@@ -318,9 +316,11 @@
     racket.direction = "none";
 
     function animationFrame() {
-
-
-        ctx.clearRect(ctx.canvas.width - 100, 300, ctx.canvas.width, 300);
+        if (beforePushBall == false) {
+            score++;
+        }
+        displayScore = "Score: " + score;
+        ctx.clearRect(ctx.canvas.width - 100, 200, ctx.canvas.width, 300);
         ctx.font = "bold 24px Chiller";
         ctx.fillStyle = "black";
         ctx.fillText(displayScore, ctx.canvas.width - 100, 300);
@@ -376,6 +376,7 @@
             destroyedBrick = false;
             firstMoveAfterBounce = true;
         }
+        
          for (var i in bottlesCoke) {
             ctx.clearRect(bottlesCoke[i].x - 5, bottlesCoke[i].y - 50, 30, 60);
             bottlesCoke[i].draw(ctx);
@@ -392,6 +393,10 @@
             if (bottlesBeer[i].y - 50 > ctx.canvas.height) {
                 bottlesBeer.splice(i, 1);
             }
+            //if ((bottlesBeer[i].y >= racket.y) && (bottlesBeer[i].x >= racket.x && bottlesBeer[i].x <= racket.x + racket.width)) {
+            //    score += 10;
+            //    bottlesBeer.splice(i, 1);
+            //}
         }
 
         //not to move outside the canvas
@@ -401,26 +406,6 @@
         if (racket.x < 0) {
             racket.x += racket.speed;
         }
-
-        //when key is not down the direction should be none
-        document.addEventListener('keyup', function (event) {
-            if (event.keyCode == 37) {
-                racket.direction = "none";
-            }
-            if (event.keyCode == 39) {
-                racket.direction = "none";
-            }
-        })
-
-        //if one if the arrows is down
-        document.addEventListener('keydown', function (event) {
-            if (event.keyCode == 37) {
-                racket.direction = "left";
-            }
-            else if (event.keyCode == 39) {
-                racket.direction = "right";
-            }
-        });
 
         if (firstMoveAfterBounce) {
             for (var i in bricks) {
@@ -435,7 +420,7 @@
                 }
             }
         }
-
+        
         ctx.clearRect(ball.x - ball.radius - 5, ball.y - ball.radius - 5, ball.radius * 2 + 15, ball.radius * 2 + 15);
         ctx.clearRect(racket.x - 5, racket.y - 10, racket.width + 10, 20);
         ball.bounce(ctx.canvas.width, ctx.canvas.height);
@@ -443,9 +428,19 @@
         ball.draw(ctx);
         racket.move();
         racket.draw(ctx);
-
-        requestAnimationFrame(animationFrame);
-
+        if (ball.y >= ctx.canvas.height) {
+            ctx.clearRect(0,0,ctx.canvas.width, ctx.canvas.height);
+            ctx.font = "bold 100px Chiller";
+            ctx.fillStyle = "purple";
+            ctx.fillText("GAME OVER", ctx.canvas.width / 2 - 220, ctx.canvas.height / 2);
+            ctx.font = "bold 42px Chiller";
+            ctx.fillStyle = "purple";
+            ctx.fillText(displayScore, ctx.canvas.width / 2 - 220, ctx.canvas.height / 2 + 50);
+            isAnimationOn = false;
+        }
+        if (isAnimationOn) {
+            requestAnimationFrame(animationFrame);
+        }
     }
 
     requestAnimationFrame(animationFrame);
