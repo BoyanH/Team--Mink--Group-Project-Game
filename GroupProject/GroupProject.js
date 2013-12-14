@@ -25,9 +25,11 @@
     displayScore = "Score: " + score;
     cordinatesOfLastDestroyedBrick = { x: 0, y: 0 };
 
+    //make a requestAnimationFrame
     window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                                   window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 
+    //function for random color
     function get_random_color() {
         var letters = '0123456789ABCDEF'.split('');
         var color = '#';
@@ -37,6 +39,7 @@
         return color;
     }
 
+    //function which make us brick
     function Brick(x, y, color) {
         this.x = x;
         this.y = y;
@@ -55,10 +58,13 @@
         }
     }
 
+    //arrays where we will put our bricks, cokes and beers
     var bricks = [];
     var bottlesBeer = [];
     var bottlesCoke = [];
     var r = 30, t = 10;
+
+    //bricks of the game
     for (var i = 0; i < 7; i++) {
         bricks.push(new Brick(r, t, get_random_color()));
         r += bricks[i].width + 5;
@@ -87,6 +93,8 @@
         bricks.push(new Brick(r, t, get_random_color()));
         r += bricks[i].width + 5;
     }
+
+    //function that make us a ball
     function Ball(x, y, radius, speed, direction) {
 
         this.x = x;
@@ -123,29 +131,34 @@
             }
             if (this.y >= racket.y - this.radius) {
 
+                //if the ball hit the left side of the racket it bounce up and left
                 if (this.x >= racket.x && this.x <= racket.x + racket.width && this.y <= ctx.canvas.height) {
                     if (this.x <= racket.x + (racket.width / 2)) {
                         this.direction.y = "up";
                         this.direction.x = "left";
                     }
+
+                 // else it if it hit the right side of the racket the ball will go up and right
                     else {
                         this.direction.y = "up";
                         this.direction.x = "right";
                     }
                 }
             }
+
+            //if the ball hit a brick and it is not destroyed
             for (var i in bricks) {
                 if (!bricks[i].isDestroyed) {
                     if (this.y - 15 >= bricks[i].y - bricks[i].height && this.y - 15 < bricks[i].y
             && this.x >= bricks[i].x && this.x <= bricks[i].x + bricks[i].width) {
-                        bricks[i].isDestroyed = true;
-                        destroyedBrick = true;
-                        cordinatesOfLastDestroyedBrick.x = bricks[i].x;
-                        cordinatesOfLastDestroyedBrick.y = bricks[i].y;
-                        countBrokenBeerBrics++;
-                        countBrokenCokeBrics++;
-                        if (this.direction.y == "up") {
-                            this.direction.y = "down";
+                        bricks[i].isDestroyed = true;  //the brick is now destroyed
+                        destroyedBrick = true;         
+                        cordinatesOfLastDestroyedBrick.x = bricks[i].x; //cordinates of the last destroyed brick because we will
+                        cordinatesOfLastDestroyedBrick.y = bricks[i].y; //use them to produce bottles
+                        countBrokenBeerBrics++;                         //the counters for cokes and beers +1 and when they reach
+                        countBrokenCokeBrics++;                         //a specific number the next brick will produce bottle
+                        if (this.direction.y == "up") {                 
+                            this.direction.y = "down";              //the bounce of the ball
                         }
                         else {
                             this.direction.y = "up";
@@ -159,6 +172,7 @@
 
     }
 
+    //function that makes us a coke bottle
     function cokeBottle(x, y, speed) {
         this.speed = speed;
         this.x = x;
@@ -217,6 +231,8 @@
 
         }
     }
+
+    //function that makes us a beer bottle
     function beerBottle(x, y, speed) {
         this.speed = speed;
         this.x = x;
@@ -282,6 +298,8 @@
 
 
     }
+
+    //function that make us a racket
     function Racket(x, y, width, speed) {
         this.x = x;
         this.y = y;
@@ -306,26 +324,27 @@
         }
     }
 
+    //if the brick is not destroyed then draw it on the canvas
     for (var i in bricks) {
         if (!bricks[i].isDestroyed)
             bricks[i].draw(ctx);
     }
+
+    //we make our ball and racket
     var ball = new Ball(400, 400, 5, 4, direction);
     var racket = new Racket(ctx.canvas.width / 2, ctx.canvas.height - 10, 100, 8);
 
-    racket.direction = "none";
+    racket.direction = "none"; //at the begining the racket dont have direction
 
+    //our function that makes the game proceed
     function animationFrame() {
-        //if (beforePushBall == false) {
-        //    score++;
-        //}
-        displayScore = "Score: " + score;
+        displayScore = "Score: " + score;                   //the score of the game
         ctx.clearRect(ctx.canvas.width - 100, 200, ctx.canvas.width, 300);
         ctx.font = "bold 24px Chiller";
         ctx.fillStyle = "black";
         ctx.fillText(displayScore, ctx.canvas.width - 100, 300);
 
-        if (beforePushBall) {
+        if (beforePushBall) { //this is when the user havent click the button space and the ball moves with the racket
             ctx.clearRect(racket.x - 25, racket.y - 25, racket.width + 50, 30);
             racket.draw(ctx);
             ball.direction.y = "up";
@@ -358,12 +377,11 @@
             });
             racket.move();
         }
-        else {
-        }
+        //if the counter for the beer reach 5 - drop a beer bottle
         if (countBrokenBeerBrics == 5) {
             bottlesBeer.push(new beerBottle(cordinatesOfLastDestroyedBrick.x + 50, cordinatesOfLastDestroyedBrick.y + 40, 3));
             countBrokenBeerBrics = 0;
-        }
+        }//if the counter for the coke reach 2 - drop a coke bottle
         if (countBrokenCokeBrics == 2) {
             bottlesCoke.push(new cokeBottle(cordinatesOfLastDestroyedBrick.x + 50, cordinatesOfLastDestroyedBrick.y + 40, 3));
             countBrokenCokeBrics = 0;
@@ -416,7 +434,7 @@
             racket.x += racket.speed;
         }
 
-        if (firstMoveAfterBounce) {
+        if (firstMoveAfterBounce) { //if first move after bounce is made then draw the bricks that are not destroyed(in this case all of them)
             for (var i in bricks) {
                 if (!bricks[i].isDestroyed) {
                     bricks[i].draw(ctx);
@@ -431,26 +449,16 @@
             }
         }
 
+        //clear the previous place of the ball
         ctx.clearRect(ball.x - ball.radius - 5, ball.y - ball.radius - 5, ball.radius * 2 + 15, ball.radius * 2 + 15);
+        //clear the previous place of the racket
         ctx.clearRect(racket.x - 5, racket.y - 10, racket.width + 10, 20);
         ball.bounce(ctx.canvas.width, ctx.canvas.height);
         ball.move();
         ball.draw(ctx);
         racket.move();
         racket.draw(ctx);
-        if (ball.y >= ctx.canvas.height) {
-            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-            ctx.font = "bold 100px Chiller";
-            ctx.fillStyle = "purple";
-            ctx.fillText("GAME OVER", ctx.canvas.width / 2 - 220, ctx.canvas.height / 2);
-            ctx.font = "bold 42px Chiller";
-            ctx.fillStyle = "purple";
-            ctx.fillText(displayScore, ctx.canvas.width / 2 - 220, ctx.canvas.height / 2 + 50);
-            isAnimationOn = false;
-        }
-
-        if (bricks.length == 0) {
-
+        if (ball.y >= ctx.canvas.height) { //if the ball go outside the canvas - the game ends
             ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
             ctx.font = "bold 100px Chiller";
             ctx.fillStyle = "purple";
@@ -470,10 +478,10 @@
 }())
 
 function reset() {
-
+    //a reset function for the game and a message
     alert("Go cry to your mama!");
     location.reload();
 }
-
+//the button for the reset of the game
 var resetBtn = document.getElementById("resetBtn");
 resetBtn.addEventListener("click", reset, true);
