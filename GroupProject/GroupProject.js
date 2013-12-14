@@ -383,6 +383,7 @@
             bottlesCoke[i].move();
             if (bottlesCoke[i].y - 50 > ctx.canvas.height) {
                 bottlesCoke.splice(i, 1);
+                scrore += 50;
             }
         }
 
@@ -391,6 +392,7 @@
             bottlesBeer[i].draw(ctx);
             bottlesBeer[i].move();
             if (bottlesBeer[i].y - 50 > ctx.canvas.height) {
+                score += 200;
                 bottlesBeer.splice(i, 1);
             }
             //if ((bottlesBeer[i].y >= racket.y) && (bottlesBeer[i].x >= racket.x && bottlesBeer[i].x <= racket.x + racket.width)) {
